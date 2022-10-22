@@ -1,0 +1,101 @@
+---
+Title: "Data Wrangling Project R---week3"
+---
+## 1. Installing packages 
+```{r}
+install.packages("tidyverse")
+```
+
+#### Load tidyverse for use in our notebook
+```{r}
+library(tidyverse)
+```
+
+## 2. Data Importation
+
+### importing the customer CSV file 
+```{r}
+# a. Importing from a CSV file from URL and loading the entire dataframe.
+
+customer_df <- read_csv("customer.csv")
+customer_df
+```
+
+
+
+## 3. Data Understanding/Exploring Data
+
+#lets preview the first 6 records of the customer dataset
+```{r}
+
+head(customer_df)
+```
+
+```{r}
+#I can quickly check the size of the dataset without displaying additional information
+
+dim(customer_df)
+```
+
+```{r}
+# I can explore the variable names, datatypes and first few records of the customer dataset.
+
+glimpse(customer_df)
+
+```
+
+##4. Data Cleaning
+###4.1 I can check for duplicates
+```{r}
+
+customer_df[duplicated(customer_df), ]
+
+```
+
+##4.2 Do we remove the duplicates or pick unique records only? I opt to pick unique records;
+
+```{r}
+customer_df[!duplicated(customer_df), ]
+customer_clean <- customer_df[!duplicated(customer_df), ]
+customer_clean
+```
+##4.3 Strip the leading and trailing spaces
+```{r}
+names(customer_clean) <- trimws(names(customer_clean), which = c("both"))
+names(customer_clean)
+```
+##4.4 
+# As a standard while working with colunn names we usually use lowercase characters. Thus,
+```{r}
+names(customer_clean) <- tolower(names(customer_clean))
+names(customer_clean)
+```
+###5. Data analysis
+#5.1 I can use a pipe %>%, and then define the column gender to be selected using the `select()` function.
+```{r}
+customer_clean %>% 
+  select(gender)
+```
+#5.2 I can filter the customer dataset for total charges greater than 5000.
+```{r}
+
+filter(customer_clean, totalcharges> 5000)
+
+```
+#5.3 I can filter the customer data set to know the churn per gender i.e. which gender did not churn most!
+```{r}
+#Male--2627rows
+#customer_clean[customer_clean$gender == 'Male' & customer_clean$churn == 'No',]
+
+#Female--2551rows
+customer_clean[customer_clean$gender == 'Female' & customer_clean$churn == 'No',]
+```
+###Questions.
+1. Which gender churned most?
+From point 5.3 above, Female churned most.
+
+2. From question 1 above, what is a possible reason for the churn?
+products/offers by the telecom are not crafted for female.
+
+3. what would be my recommendation?
+Craft customer retention programs to woe Female and sensitize on the products. 
